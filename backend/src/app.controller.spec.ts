@@ -41,47 +41,13 @@ describe('AppController', () => {
     const password = 'qwerty'
 
     it('should signIn"', async () => {
-      await userController.signIn({ email, password }, { cookie: (name, value) => { userId = value } })
-      expect(!!userId).toBe(true);
+      const result = await userController.signIn({ email, password })
+      expect(!!result.access_token).toBe(true);
     });
 
     it('should signUp"', async () => {
-      await userController.signUp({ email, password }, { cookie: (name, value) => { userId = value } })
-      expect(!!userId).toBe(true);
-    });
-
-    it('should isLogin"', async () => {
-      const isLogin = await userController.isLogin({ cookies: {userId: undefined}})
-      expect(isLogin.isLogin).toBe(false);
-    });
-
-    it('should FileUpload and get', async () => {
-      const fileName = 'F1'
-      const fileBody = 'file data'
-
-      const { fileId } = await fileController.addFile({ cookies: { userId }}, {
-        fileName,
-        data: Buffer.from(fileBody, 'ascii').toString('base64'),
-        size: fileBody.length
-      })
-
-      const { fileId: fileId2 } = await fileController.addFile({ cookies: { userId }}, {
-        fileName,
-        data: Buffer.from(fileBody, 'ascii').toString('base64'),
-        size: fileBody.length
-      })
-
-      expect(fileId).toBe(fileId2);
-
-      const files: IFileList = await fileController.listFiles({ cookies: { userId }})
-
-      const file: IFileWithId = files.files.find( f => f.fileName === fileName) 
-
-      expect(!!file).toBe(true);
-
-      const data = await fileController.getFile({ cookies: { userId }}, { fileId: file.id })
-
-      expect(data.toString('ascii')).toBe(fileBody);
+      const result = await userController.signUp({ email, password })
+      expect(!!result.access_token).toBe(true);
     });
 
   });

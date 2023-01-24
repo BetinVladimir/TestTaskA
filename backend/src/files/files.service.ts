@@ -12,8 +12,8 @@ export class FileService {
     const con = await this.db.getConnection()
     try {
       const { rows } = await con.query(
-        'select file_id from files where filename = $1', 
-        [body.fileName]
+        'select file_id from files where filename = $1 and user_id = $2', 
+        [body.fileName, userId]
       )
       if (rows.length) {
         return rows[0].file_id
@@ -21,7 +21,7 @@ export class FileService {
       const id = uuidv4()
       await con.query(
         'insert into files (file_id, user_id, filename, dat_i, data, size) values ($1, $2, $3, now(), $4, $5)', 
-        [id, userId, body.fileName, Buffer.from(body.data, 'base64'), body.size]
+        [id, userId, body.fileName, body.data, body.size]
       )
       return id
     } catch (err) {
@@ -61,7 +61,6 @@ export class FileService {
         [userId, fileId]
       )
       if (rows.length) {
-        console.log('load', rows[0].data.toString('ascii'))
         return rows[0].data
       }
     } catch (err) {

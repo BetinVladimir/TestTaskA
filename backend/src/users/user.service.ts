@@ -45,21 +45,5 @@ export class UserService {
       con.release()
     } 
   }
-  
-  public async getUser(userId: string): Promise<string> {
-    const con = await this.db.getConnection()
-    try {
-      const { rows } = await con.query('select user_id from users where user_id = $1', [userId])
-      if (rows.length) {
-        return rows[0].user_id
-      }
-      else throw Error(`User not found`)
-    } catch (err) {
-      console.log(err)
-      throw err
-    } finally {
-      con.release()
-    } 
-  }
 
 }

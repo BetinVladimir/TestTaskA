@@ -1,58 +1,30 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
+import { useAppSelector } from './app/hooks';
 import './App.css';
+import { selectStatus, selectError } from './app/appSlice';
+import SignIn from './features/users/SignIn';
+import SignUp from './features/users/SignUp';
+import { Files } from './features/files/Files';
+
+const Loading = () => (<div>Loading...</div>)
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className="App-link"
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className="App-link"
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span>
-      </header>
-    </div>
-  );
+
+  const status = useAppSelector(selectStatus);
+  const error = useAppSelector(selectError);
+
+  let component = <></>
+
+  switch (status) {
+    case 'failed': component = <div><SignIn/><p>{error}</p></div>; break;
+    case 'signup': component = <SignUp/>; break;
+    case 'loading': component = <Loading/>; break;
+    case 'files': component = <Files/>; break;
+    default: component = <SignIn/>; break;
+  }
+
+  return(<div className="App">{component}</div>)
 }
 
 export default App;

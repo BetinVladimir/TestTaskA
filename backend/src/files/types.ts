@@ -1,6 +1,6 @@
 export interface IFile {
     fileName: string
-    data: string
+    data: Buffer
     size: number
 }
 
@@ -13,4 +13,9 @@ export interface IFileWithId {
 
 export interface IFileList {
     files: IFileWithId[]
+}
+
+export interface Status{
+    status: 'OK',
+    token: string
 }
